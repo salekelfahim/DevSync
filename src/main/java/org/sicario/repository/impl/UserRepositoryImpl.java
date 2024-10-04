@@ -9,7 +9,6 @@ import org.sicario.repository.interfaces.UserRepository;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
-
     EntityManagerFactory entityManagerFactory;
 
     public UserRepositoryImpl(EntityManagerFactory entityManagerFactory) {
@@ -86,6 +85,5 @@ public class UserRepositoryImpl implements UserRepository {
             entityManager.close();
         }
     }
-
 }
 
