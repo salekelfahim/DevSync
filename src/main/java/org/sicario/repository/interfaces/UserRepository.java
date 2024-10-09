@@ -2,6 +2,7 @@ package org.sicario.repository.interfaces;
 
 import org.sicario.model.entities.User;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
 
@@ -10,4 +11,5 @@ public interface UserRepository {
     List<User> findAll();
     void update(User user);
     void delete(User user);
+    Optional<User> findByEmail(String email);
 }

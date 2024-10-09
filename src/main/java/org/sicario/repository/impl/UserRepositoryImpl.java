@@ -2,11 +2,13 @@ package org.sicario.repository.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import org.sicario.model.entities.User;
 import org.sicario.repository.interfaces.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepository {
     EntityManagerFactory entityManagerFactory;
@@ -84,6 +86,18 @@ public class UserRepositoryImpl implements UserRepository {
         } finally {
             entityManager.close();
         }
+    }
+    @Override
+    public Optional<User> findByEmail(String email) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            TypedQuery<User> query = entityManager.createQuery("select u from User u where u.email = :email ", User.class);
+            query.setParameter("email", email);
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+
     }
 }
 
