@@ -13,7 +13,7 @@
     <div class="w-full max-w-3xl p-8 bg-white rounded-lg shadow dark:bg-gray-800 lg:px-12">
         <h1 class="text-3xl font-semibold text-gray-800 capitalize dark:text-white mb-6">Login</h1>
 
-        <form class="grid grid-cols-1 gap-6" action="login" method="post">
+        <form class="grid grid-cols-1 gap-6" action="users?action=login" method="post">
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
                 <input type="email" name="email" class="block w-full px-4 py-2 mt-2 text-gray-800 bg-gray-100 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring focus:ring-opacity-50" required>
