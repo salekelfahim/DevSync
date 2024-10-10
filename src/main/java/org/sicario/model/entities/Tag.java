@@ -30,4 +30,8 @@ public class Tag {
         this.name = name;
         this.tasks = tasks == null ? new ArrayList<Task>() : tasks;
     }
+
+    public Tag(String name) {
+        this.name = name;
+    }
 }
