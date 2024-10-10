@@ -18,5 +18,23 @@
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TaskServlet</servlet-name>
+        <servlet-class>org.sicario.servlets.TaskServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TaskServlet</servlet-name>
+        <url-pattern>/tasks</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TagServlet</servlet-name>
+        <servlet-class>org.sicario.servlets.TagServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TagServlet</servlet-name>
+        <url-pattern>/tags</url-pattern>
+    </servlet-mapping>
 </web-app>
 
