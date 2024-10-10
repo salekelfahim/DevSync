@@ -1,9 +1,11 @@
 package org.sicario.service;
 
 import org.sicario.model.entities.User;
+import org.sicario.model.enums.UserRole;
 import org.sicario.repository.interfaces.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UserService {
 
@@ -40,5 +42,12 @@ public class UserService {
 
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public List<User> getRegularUsers() {
+        List<User> allUsers = getAllUsers();
+        return allUsers.stream()
+                .filter(user -> user.getRole().equals(UserRole.USER))
+                .collect(Collectors.toList());
     }
 }

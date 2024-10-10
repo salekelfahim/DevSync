@@ -53,7 +53,7 @@ public class Task {
     @JoinColumn(name = "assignee_id", nullable = false )
     private User assignee;
 
-    public Task(String title, String description, LocalDate creationDate, LocalDate dueDate, TaskStatus status, List<Tag> tags, User creator, User assignee) {
+    public Task(String title, String description, LocalDate creationDate, LocalDate dueDate, TaskStatus status, List<Tag> tags, User creator) {
         this.title = title;
         this.description = description;
         this.creationDate = creationDate;
@@ -61,6 +61,6 @@ public class Task {
         this.status = status;
         this.tags = tags != null ? tags : new ArrayList<>();
         this.creator = creator;
-        this.assignee = assignee;
+//        this.assignee = assignee;
     }
 }
