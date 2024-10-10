@@ -2,8 +2,8 @@ package org.sicario.service;
 
 import org.sicario.model.entities.User;
 import org.sicario.repository.interfaces.UserRepository;
-
 import java.util.List;
+import java.util.Optional;
 
 public class UserService {
 
@@ -36,5 +36,9 @@ public class UserService {
         }else {
             System.out.println("User not found");
         }
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
