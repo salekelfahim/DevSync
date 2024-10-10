@@ -31,18 +31,18 @@ public class TagServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("list".equals(action)) {
-            listTags(request, response);
+            tags(request, response);
 
         } else if ("delete".equals(action)) {
             deleteTag(request, response);
         } else {
-            listTags(request, response);
+            tags(request, response);
         }
     }
-    private void listTags(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void tags(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Tag> tags = tagService.findAll();
         request.setAttribute("tags", tags);
-        request.getRequestDispatcher("/WEB-INF/views/dashboard/Tag/tags.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/tags.jsp").forward(request, response);
     }
     private void deleteTag(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long tagId = Long.parseLong(request.getParameter("id"));

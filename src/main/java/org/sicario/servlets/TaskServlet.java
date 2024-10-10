@@ -47,7 +47,7 @@ public class TaskServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("list".equals(action)) {
-            listTasks(request, response);
+            tasks(request, response);
         } else if ("create".equals(action)) {
             showCreateForm(request, response);
         }else if ("edit".equals(action)) {
@@ -55,21 +55,21 @@ public class TaskServlet extends HttpServlet {
         } else if ("delete".equals(action)) {
 //            deleteTask(request, response);
         } else {
-            listTasks(request, response);
+            tasks(request, response);
         }
     }
 
-    private void listTasks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void tasks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Task> tasks = taskService.findAll();
         request.setAttribute("tasks", tasks);
-        request.getRequestDispatcher("/WEB-INF/views/dashboard/Task/tasks.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/tasks.jsp").forward(request, response);
     }
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Tag> tags = tagService.findAll();
         List<User> users = userService.getRegularUsers();
         request.setAttribute("tags", tags);
         request.setAttribute("users", users);
-        request.getRequestDispatcher("/WEB-INF/views/dashboard/Task/createTaskForm.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/createTaskForm.jsp").forward(request, response);
     }
 
     @Override
