@@ -17,6 +17,11 @@
             <a href="users?action=create" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Add User</a>
             <a href="tags?action=list" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Tags</a>
             <a href="tasks?action=list" class="text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-500 dark:hover:bg-yellow-600 focus:outline-none dark:focus:ring-yellow-400">Tasks</a>
+            <form action="${pageContext.request.contextPath}/users?action=logout" method="get">
+                <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700">
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
 
