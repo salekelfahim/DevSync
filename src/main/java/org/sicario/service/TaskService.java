@@ -1,6 +1,8 @@
 package org.sicario.service;
 
 import org.sicario.model.entities.Task;
+import org.sicario.model.entities.User;
+import org.sicario.model.enums.TaskStatus;
 import org.sicario.repository.interfaces.TaskRepository;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,10 @@ public class TaskService {
     public void delete(Long id) {
         Optional<Task> task = taskRepository.findById(id);
         task.ifPresent(value -> taskRepository.delete(value));
+    }
+
+    public List<Task> findByStatusAndUser(TaskStatus status, User user) {
+        return taskRepository.findByStatusAndUser(status, user);
     }
 
 }

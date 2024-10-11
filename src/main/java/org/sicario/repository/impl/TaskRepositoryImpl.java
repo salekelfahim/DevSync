@@ -2,7 +2,10 @@ package org.sicario.repository.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 import org.sicario.model.entities.Task;
+import org.sicario.model.entities.User;
+import org.sicario.model.enums.TaskStatus;
 import org.sicario.repository.interfaces.TaskRepository;
 import java.util.List;
 import java.util.Optional;
@@ -67,5 +70,12 @@ public class TaskRepositoryImpl implements TaskRepository {
         } finally {
             entityManager.close();
         }
+    }
+    @Override
+    public List<Task> findByStatusAndUser(TaskStatus status, User user) {
+        TypedQuery<Task> query = entityManagerFactory.createEntityManager().createQuery("SELECT t FROM Task t WHERE t.status = :status AND t.assignee = :user", Task.class);
+        query.setParameter("status", status);
+        query.setParameter("user", user);
+        return query.getResultList();
     }
 }

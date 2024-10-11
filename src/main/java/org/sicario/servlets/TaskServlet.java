@@ -50,10 +50,8 @@ public class TaskServlet extends HttpServlet {
             tasks(request, response);
         } else if ("create".equals(action)) {
             showCreateForm(request, response);
-        }else if ("edit".equals(action)) {
-//            showEditForm(request, response);
-        } else if ("delete".equals(action)) {
-//            deleteTask(request, response);
+        } else if ("userTasks".equals(action)) {
+            userTasks(request, response);
         } else {
             tasks(request, response);
         }
@@ -150,5 +148,25 @@ public class TaskServlet extends HttpServlet {
         }
 
         return null;
+    }
+
+    private void userTasks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/users?action=login");
+            return;
+        }
+
+        List<Task> notStartedTasks = taskService.findByStatusAndUser(TaskStatus.NOT_STARTED, user);
+        List<Task> inProgressTasks = taskService.findByStatusAndUser(TaskStatus.IN_PROGRESS, user);
+        List<Task> completedTasks = taskService.findByStatusAndUser(TaskStatus.COMPLETED, user);
+        List<Task> canceledTasks = taskService.findByStatusAndUser(TaskStatus.CANCELED, user);
+
+        request.setAttribute("notStartedTasks", notStartedTasks);
+        request.setAttribute("inProgressTasks", inProgressTasks);
+        request.setAttribute("completedTasks", completedTasks);
+        request.setAttribute("canceledTasks", canceledTasks);
+
+        request.getRequestDispatcher("/WEB-INF/views/userTasks.jsp").forward(request, response);
     }
 }

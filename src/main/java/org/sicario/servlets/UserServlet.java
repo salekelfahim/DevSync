@@ -143,7 +143,7 @@ public class UserServlet extends HttpServlet {
 
     private void role(HttpServletRequest request, HttpServletResponse response,User user) throws ServletException, IOException {
         if (user.getRole().equals(UserRole.USER)){
-            response.sendRedirect(request.getContextPath() + "/users?action=list");
+            response.sendRedirect(request.getContextPath() + "/tasks?action=userTasks");
         }else if(user.getRole().equals(UserRole.MANAGER)){
             response.sendRedirect(request.getContextPath() + "/users?action=list");
         } else {
