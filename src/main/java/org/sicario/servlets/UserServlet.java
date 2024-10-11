@@ -28,23 +28,31 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-
-        if ("list".equals(action)) {
+        if (action == null || action.isEmpty()) {
+            showLogin(request, response);
+        } else if ("list".equals(action)) {
             listUsers(request, response);
         } else if ("create".equals(action)) {
             showCreateForm(request, response);
-        }else if ("edit".equals(action)) {
+        } else if ("edit".equals(action)) {
             showEditForm(request, response);
         } else if ("delete".equals(action)) {
             deleteUser(request, response);
         } else if ("login".equals(action)) {
             showLogin(request, response);
+        } else if ("logout".equals(action)) {
+            logout(request, response);
         } else {
-            listUsers(request, response);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action specified");
         }
     }
 
     private void listUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("loggedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/users?action=login");
+            return;
+        }
         List<User> users = userService.getAllUsers();
 
         request.setAttribute("users", users);
@@ -135,7 +143,6 @@ public class UserServlet extends HttpServlet {
             }else {
                 response.sendRedirect(request.getContextPath() + "/users?action=login");
             }
-
         }else {
             response.sendRedirect(request.getContextPath() + "/users?action=login");
         }
@@ -149,5 +156,13 @@ public class UserServlet extends HttpServlet {
         } else {
             response.sendRedirect(request.getContextPath() + "/users?action=login");
         }
+    }
+
+    private void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        response.sendRedirect(request.getContextPath() + "/users?action=login");
     }
 }

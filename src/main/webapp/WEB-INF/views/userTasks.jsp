@@ -69,8 +69,11 @@
     </div>
 
     <div class="mt-8">
-      <a href="tasks" class="text-blue-600 hover:underline">Back to Task List</a>
-    </div>
+      <form action="${pageContext.request.contextPath}/users?action=logout" method="get">
+        <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700">
+          Logout
+        </button>
+      </form>    </div>
   </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
