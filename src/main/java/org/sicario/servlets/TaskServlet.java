@@ -30,6 +30,7 @@ public class TaskServlet extends HttpServlet {
     TaskService taskService;
     TagService tagService;
     UserService userService;
+
     @Override
     public void init() throws ServletException {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("DevSyncPU");
@@ -52,6 +53,8 @@ public class TaskServlet extends HttpServlet {
             showCreateForm(request, response);
         } else if ("userTasks".equals(action)) {
             userTasks(request, response);
+        } else if ("changeStatus".equals(action)) {
+            changeStatus(request, response);
         } else {
             tasks(request, response);
         }
@@ -157,6 +160,16 @@ public class TaskServlet extends HttpServlet {
             return;
         }
 
+        List<Task> allTasks = taskService.findByUser(user);
+        LocalDate today = LocalDate.now();
+
+        for (Task task : allTasks) {
+            if (task.getDueDate().isBefore(today) && task.getStatus() != TaskStatus.COMPLETED) {
+                task.setStatus(TaskStatus.CANCELED);
+                taskService.update(task);
+            }
+        }
+
         List<Task> notStartedTasks = taskService.findByStatusAndUser(TaskStatus.NOT_STARTED, user);
         List<Task> inProgressTasks = taskService.findByStatusAndUser(TaskStatus.IN_PROGRESS, user);
         List<Task> completedTasks = taskService.findByStatusAndUser(TaskStatus.COMPLETED, user);
@@ -169,4 +182,23 @@ public class TaskServlet extends HttpServlet {
 
         request.getRequestDispatcher("/WEB-INF/views/userTasks.jsp").forward(request, response);
     }
+
+    private void changeStatus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long taskId = Long.parseLong(request.getParameter("taskId"));
+        String newStatus = request.getParameter("newStatus");
+
+        Task task = taskService.findById(taskId).orElse(null);
+        if (task != null) {
+            LocalDate today = LocalDate.now();
+            if (task.getDueDate().isBefore(today)) {
+                task.setStatus(TaskStatus.CANCELED);
+            } else {
+                task.setStatus(TaskStatus.valueOf(newStatus));
+            }
+            taskService.update(task);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/tasks?action=userTasks");
+    }
+
 }

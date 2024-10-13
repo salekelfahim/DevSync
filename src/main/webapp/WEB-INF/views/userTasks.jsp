@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -13,7 +12,6 @@
 <section class="flex justify-center items-center min-h-screen px-4">
   <div class="w-full max-w-3xl p-8 bg-white rounded-lg shadow dark:bg-gray-800 lg:px-12">
     <h1 class="text-3xl font-semibold text-gray-800 capitalize dark:text-white mb-6">Hello, ${loggedUser.firstName}!</h1>
-
     <div class="grid grid-cols-1 gap-6">
       <div>
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Not Started</h2>
@@ -23,11 +21,18 @@
               <h3 class="font-medium text-gray-800 dark:text-gray-200">${task.title}</h3>
               <p class="text-gray-600 dark:text-gray-400">${task.description}</p>
               <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Due: ${task.dueDate}</p>
+              <form action="${pageContext.request.contextPath}/tasks" method="get" class="mt-2">
+                <input type="hidden" name="action" value="changeStatus">
+                <input type="hidden" name="taskId" value="${task.id}">
+                <input type="hidden" name="newStatus" value="IN_PROGRESS">
+                <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
+                  Start Task
+                </button>
+              </form>
             </div>
           </c:forEach>
         </div>
       </div>
-
       <div>
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">In Progress</h2>
         <div class="mt-4">
@@ -36,11 +41,18 @@
               <h3 class="font-medium text-gray-800 dark:text-gray-200">${task.title}</h3>
               <p class="text-gray-600 dark:text-gray-400">${task.description}</p>
               <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Due: ${task.dueDate}</p>
+              <form action="${pageContext.request.contextPath}/tasks" method="get" class="mt-2">
+                <input type="hidden" name="action" value="changeStatus">
+                <input type="hidden" name="taskId" value="${task.id}">
+                <input type="hidden" name="newStatus" value="COMPLETED">
+                <button type="submit" class="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700">
+                  Complete Task
+                </button>
+              </form>
             </div>
           </c:forEach>
         </div>
       </div>
-
       <div>
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Completed</h2>
         <div class="mt-4">
@@ -53,7 +65,6 @@
           </c:forEach>
         </div>
       </div>
-
       <div>
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Canceled</h2>
         <div class="mt-4">
@@ -67,13 +78,13 @@
         </div>
       </div>
     </div>
-
     <div class="mt-8">
       <form action="${pageContext.request.contextPath}/users?action=logout" method="get">
         <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700">
           Logout
         </button>
-      </form>    </div>
+      </form>
+    </div>
   </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

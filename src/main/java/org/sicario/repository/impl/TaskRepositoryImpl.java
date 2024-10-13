@@ -78,4 +78,15 @@ public class TaskRepositoryImpl implements TaskRepository {
         query.setParameter("user", user);
         return query.getResultList();
     }
+    @Override
+    public List<Task> findByUser(User user) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        try {
+            TypedQuery<Task> query = em.createQuery("SELECT t FROM Task t WHERE t.assignee = :user", Task.class);
+            query.setParameter("user", user);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

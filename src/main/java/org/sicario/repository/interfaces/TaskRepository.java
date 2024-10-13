@@ -14,4 +14,5 @@ public interface TaskRepository {
     void delete(Task task);
     void update(Task task);
     List<Task> findByStatusAndUser(TaskStatus status, User user);
+    List<Task> findByUser(User user);
 }
