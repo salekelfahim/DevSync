@@ -15,6 +15,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public UserService() {
+    }
+
     public void createUser(User user) {
         userRepository.save(user);
     }

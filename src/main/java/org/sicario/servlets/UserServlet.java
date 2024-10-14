@@ -102,7 +102,7 @@ public class UserServlet extends HttpServlet {
 
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        User newUser = new User(firstName, lastName, email, hashedPassword, UserRole.valueOf(role));
+        User newUser = new User(firstName, lastName, email, hashedPassword, UserRole.valueOf(role), 1, 2);
         userService.createUser(newUser);
         response.sendRedirect(request.getContextPath() + "/users?action=list");
     }

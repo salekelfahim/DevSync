@@ -22,6 +22,18 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    private int tokenDelete;
+    private int tokenRefuse;
+
+    public User(String firstName, String lastName, String email, String password, UserRole role, int tokenDelete, int tokenRefuse) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.tokenDelete = tokenDelete;
+        this.tokenRefuse = tokenRefuse;
+    }
 
     public User(String firstName, String lastName, String email, String password, UserRole role) {
         this.firstName = firstName;
