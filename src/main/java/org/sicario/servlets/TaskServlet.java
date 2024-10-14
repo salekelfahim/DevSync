@@ -80,8 +80,8 @@ public class TaskServlet extends HttpServlet {
 
         if ("create".equals(action)) {
             createTask(request, response);
-        }else if ("edit".equals(action)) {
-            System.out.println();
+        }else if ("refuseTask".equals(action)) {
+            refuseTask(request, response);
         }
     }
 
@@ -204,6 +204,26 @@ public class TaskServlet extends HttpServlet {
             taskService.update(task);
         }
 
+        response.sendRedirect(request.getContextPath() + "/tasks?action=userTasks");
+    }
+
+    private void refuseTask(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String taskId = request.getParameter("taskId");
+        Optional<Task> optionalTask = taskService.findById(Long.parseLong(taskId));
+
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+            User manager = userService.getUserById(1L);
+            User user = (User) request.getSession().getAttribute("loggedUser");
+            if (manager != null) {
+                if (user.getTokenRefuse() > 0) {
+                task.setAssignee(manager);
+                user.setTokenRefuse(user.getTokenRefuse() - 1);
+                userService.updateUser(user);
+                taskService.update(task);
+                }
+            }
+        }
         response.sendRedirect(request.getContextPath() + "/tasks?action=userTasks");
     }
 
