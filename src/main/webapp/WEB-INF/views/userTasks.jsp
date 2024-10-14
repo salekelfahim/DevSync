@@ -12,6 +12,11 @@
 <section class="flex justify-center items-center min-h-screen px-4">
   <div class="w-full max-w-3xl p-8 bg-white rounded-lg shadow dark:bg-gray-800 lg:px-12">
     <h1 class="text-3xl font-semibold text-gray-800 capitalize dark:text-white mb-6">Hello, ${loggedUser.firstName}!</h1>
+    <div class="flex justify-between items-center mb-6">
+      <a href="tasks?action=create" class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
+        Add New Task
+      </a>
+    </div>
     <div class="grid grid-cols-1 gap-6">
       <div>
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Not Started</h2>

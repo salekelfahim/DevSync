@@ -54,20 +54,22 @@
         </div>
       </div>
 
-      <div>
-        <label for="assignee_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">Assignee</label>
-        <select
-                name="assignee_id"
-                id="assignee_id"
-                class="js-example-basic-single block w-full px-4 py-2 mt-2 text-gray-800 bg-gray-100 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-        >
-          <option value="" selected disabled>Assign to...</option>
-          <c:forEach var="user" items="${users}">
-            <option value="${user.id}">${user.firstName} ${user.lastName}</option>
-          </c:forEach>
-        </select>
-      </div>
+      <c:choose>
+        <c:when test="${loggedUser.role == 'MANAGER'}">
+          <div>
+            <label for="assignee_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">Assignee</label>
+            <select name="assignee_id" id="assignee_id" class="js-example-basic-single block w-full px-4 py-2 mt-2 text-gray-800 bg-gray-100 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+              <option value="" selected disabled>Assign to...</option>
+              <c:forEach var="user" items="${users}">
+                <option value="${user.id}">${user.firstName} ${user.lastName}</option>
+              </c:forEach>
+            </select>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <input type="hidden" name="assignee_id" value="${loggedUser.id}" />
+        </c:otherwise>
+      </c:choose>
 
       <div>
         <label for="tags" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">Tags</label>

@@ -10,6 +10,7 @@ import org.sicario.model.entities.Tag;
 import org.sicario.model.entities.Task;
 import org.sicario.model.entities.User;
 import org.sicario.model.enums.TaskStatus;
+import org.sicario.model.enums.UserRole;
 import org.sicario.repository.impl.TagRepositoryImpl;
 import org.sicario.repository.impl.TaskRepositoryImpl;
 import org.sicario.repository.impl.UserRepositoryImpl;
@@ -122,7 +123,12 @@ public class TaskServlet extends HttpServlet {
                 task.setAssignee(null);
             }
             taskService.create(task);
-            response.sendRedirect("tasks?action=list");
+
+            if (creator.getRole() == UserRole.MANAGER) {
+                response.sendRedirect("tasks?action=list");
+            } else {
+                response.sendRedirect("tasks?action=userTasks");
+            }
         }
     }
 
