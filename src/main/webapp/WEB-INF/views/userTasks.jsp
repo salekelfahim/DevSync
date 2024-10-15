@@ -34,7 +34,8 @@
                   Start Task
                 </button>
               </form>
-              <form action="${pageContext.request.contextPath}/tasks" method="post" class="mt-2">
+              <form action="${pageContext.request.contextPath}/tasks" method="post" class="mt-2"
+                    onsubmit="return confirm('Are you sure you want to refuse this task? This will consume one of your refuse tokens.');">
                 <input type="hidden" name="action" value="refuseTask">
                 <input type="hidden" name="taskId" value="${task.id}">
                 <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700">

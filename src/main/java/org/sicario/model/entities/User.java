@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.sicario.model.enums.UserRole;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -24,6 +26,9 @@ public class User {
     private UserRole role;
     private int tokenDelete;
     private int tokenRefuse;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Request> requests;
 
     public User(String firstName, String lastName, String email, String password, UserRole role, int tokenDelete, int tokenRefuse) {
         this.firstName = firstName;

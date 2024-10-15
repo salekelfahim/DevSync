@@ -36,5 +36,15 @@
         <servlet-name>TagServlet</servlet-name>
         <url-pattern>/tags</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RequestServlet</servlet-name>
+        <servlet-class>org.sicario.servlets.RequestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RequestServlet</servlet-name>
+        <url-pattern>/requests</url-pattern>
+    </servlet-mapping>
+
 </web-app>
 

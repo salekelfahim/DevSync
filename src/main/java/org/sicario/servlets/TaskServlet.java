@@ -6,17 +6,21 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.sicario.model.entities.Request;
 import org.sicario.model.entities.Tag;
 import org.sicario.model.entities.Task;
 import org.sicario.model.entities.User;
 import org.sicario.model.enums.TaskStatus;
 import org.sicario.model.enums.UserRole;
+import org.sicario.repository.impl.RequestRepositoryImpl;
 import org.sicario.repository.impl.TagRepositoryImpl;
 import org.sicario.repository.impl.TaskRepositoryImpl;
 import org.sicario.repository.impl.UserRepositoryImpl;
+import org.sicario.repository.interfaces.RequestRepository;
 import org.sicario.repository.interfaces.TagRepository;
 import org.sicario.repository.interfaces.TaskRepository;
 import org.sicario.repository.interfaces.UserRepository;
+import org.sicario.service.RequestService;
 import org.sicario.service.TagService;
 import org.sicario.service.TaskService;
 import org.sicario.service.UserService;
@@ -32,15 +36,19 @@ public class TaskServlet extends HttpServlet {
     TagService tagService;
     UserService userService;
 
+    RequestService requestService;
+
     @Override
     public void init() throws ServletException {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("DevSyncPU");
         TaskRepository taskRepository = new TaskRepositoryImpl(entityManagerFactory);
         TagRepository tagRepository = new TagRepositoryImpl(entityManagerFactory);
         UserRepository userRepository = new UserRepositoryImpl(entityManagerFactory);
+        RequestRepository requestRepository = new RequestRepositoryImpl(entityManagerFactory);
         taskService = new TaskService(taskRepository);
         tagService = new TagService(tagRepository);
         userService = new UserService(userRepository);
+        requestService = new RequestService(requestRepository);
     }
 
     @Override
@@ -106,7 +114,7 @@ public class TaskServlet extends HttpServlet {
             request.getRequestDispatcher("tasks?action=create").forward(request, response);
 
         } else{
-            Task task = new Task(title,description,creationDate,dueDate, TaskStatus.NOT_STARTED, null,creator);
+            Task task = new Task(title,description,creationDate,dueDate, TaskStatus.NOT_STARTED, null,creator, false);
             List<Tag> selectedTags = new ArrayList<>();
             if (tagIds != null) {
                 for (String tagId : tagIds) {
@@ -215,14 +223,23 @@ public class TaskServlet extends HttpServlet {
             Task task = optionalTask.get();
             User manager = userService.getUserById(1L);
             User user = (User) request.getSession().getAttribute("loggedUser");
-            if (manager != null) {
+
+            if (manager != null && user != null) {
                 if (user.getTokenRefuse() > 0) {
-                task.setAssignee(manager);
-                user.setTokenRefuse(user.getTokenRefuse() - 1);
-                userService.updateUser(user);
-                taskService.update(task);
+                    Request refuseRequest = new Request(user, task, "PENDING");
+                    requestService.createRequest(refuseRequest);
+                    user.setTokenRefuse(user.getTokenRefuse() - 1);
+                    userService.updateUser(user);
+
+                } else {
+                    request.setAttribute("error", "Not enough refuse tokens.");
                 }
+            } else {
+                request.setAttribute("error", "Manager or user not found.");
+
             }
+        } else {
+            request.setAttribute("error", "Task not found.");
         }
         response.sendRedirect(request.getContextPath() + "/tasks?action=userTasks");
     }
