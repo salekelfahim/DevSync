@@ -16,6 +16,7 @@ import org.sicario.service.RequestService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class RequestServlet extends HttpServlet {
 
@@ -25,20 +26,26 @@ public class RequestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String action = request.getParameter("action");
 
-        switch (action) {
-            case "list":
-                listRequests(request, response);
-                break;
-            case "approve":
-                approveRequest(request, response);
-                break;
-            case "reject":
-                rejectRequest(request, response);
-                break;
-            default:
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if ("list".equals(action)) {
+            listRequests(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        if ("approve".equals(action)) {
+            approveRequest(request, response);
+        } else if ("reject".equals(action)) {
+            rejectRequest(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -51,8 +58,25 @@ public class RequestServlet extends HttpServlet {
 
 
     private void approveRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long requestId = Long.parseLong(request.getParameter("requestId"));
+        Optional<Request> approvedRequest = requestService.approveRequest(requestId);
+
+        if (approvedRequest.isPresent()) {
+            Long taskId = approvedRequest.get().getTask().getId();
+            response.sendRedirect(request.getContextPath() + "/tasks?action=edit&taskId=" + taskId);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Request not found or not in PENDING state");
+        }
     }
 
+
     private void rejectRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long requestId = Long.parseLong(request.getParameter("requestId"));
+        boolean rejected = requestService.rejectRequest(requestId);
+        if (rejected) {
+            response.sendRedirect(request.getContextPath() + "/requests?action=list");
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Request not found or not in PENDING state");
+        }
     }
 }

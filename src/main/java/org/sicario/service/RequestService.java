@@ -47,4 +47,29 @@ public class RequestService {
     public void deleteRequest(Long id) {
         requestRepository.deleteById(id);
     }
+
+    public Optional<Request> approveRequest(Long requestId) {
+        Optional<Request> requestOptional = requestRepository.findById(requestId);
+        if (requestOptional.isPresent()) {
+            Request request = requestOptional.get();
+            if ("PENDING".equals(request.getStatus())) {
+                request.setStatus("APPROVED");
+                return Optional.of(requestRepository.update(request));
+            }
+        }
+        return Optional.empty();
+    }
+
+    public boolean rejectRequest(Long requestId) {
+        Optional<Request> requestOptional = requestRepository.findById(requestId);
+        if (requestOptional.isPresent()) {
+            Request request = requestOptional.get();
+            if ("PENDING".equals(request.getStatus())) {
+                request.setStatus("REJECTED");
+                requestRepository.update(request);
+                return true;
+            }
+        }
+        return false;
+    }
 }

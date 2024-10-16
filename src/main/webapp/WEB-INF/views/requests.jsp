@@ -12,12 +12,14 @@
 <body class="bg-gray-900 text-white">
 <section class="container px-6 mx-auto py-10">
   <h2 class="text-lg font-medium text-gray-200 dark:text-white">List of Requests</h2>
-
   <div class="flex flex-col mt-6">
     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
         <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <div>
+            <a href="users?action=list" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Home</a>
+          </div>
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-800">
             <tr>
               <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left text-gray-400 dark:text-gray-400">User</th>
@@ -37,12 +39,20 @@
                 <td class="px-4 py-4 text-sm whitespace-nowrap">
                   <div class="flex gap-2">
                     <c:if test="${request.status == 'PENDING'}">
-                      <a href="requests?action=approve&id=${request.id}" class="px-4 py-2 bg-green-500 border rounded-lg text-sm font-medium text-gray-200 transition-colors duration-200 hover:bg-green-600 dark:hover:bg-gray-800">
-                        Approve
-                      </a>
-                      <a href="requests?action=reject&id=${request.id}" class="px-4 py-2 bg-red-500 border rounded-lg text-sm font-medium text-gray-200 transition-colors duration-200 hover:bg-red-600 dark:hover:bg-gray-800">
-                        Reject
-                      </a>
+                      <form action="${pageContext.request.contextPath}/requests" method="post" style="display: inline;">
+                        <input type="hidden" name="action" value="approve">
+                        <input type="hidden" name="requestId" value="${request.id}">
+                        <button type="submit" class="px-4 py-2 bg-green-500 border rounded-lg text-sm font-medium text-gray-200 transition-colors duration-200 hover:bg-green-600 dark:hover:bg-gray-800">
+                          Approve
+                        </button>
+                      </form>
+                      <form action="requests" method="post" style="display: inline;">
+                        <input type="hidden" name="action" value="reject">
+                        <input type="hidden" name="requestId" value="${request.id}">
+                        <button type="submit" class="px-4 py-2 bg-red-500 border rounded-lg text-sm font-medium text-gray-200 transition-colors duration-200 hover:bg-red-600 dark:hover:bg-gray-800">
+                          Reject
+                        </button>
+                      </form>
                     </c:if>
                   </div>
                 </td>
@@ -54,9 +64,7 @@
       </div>
     </div>
   </div>
-
 </section>
-
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 </html>

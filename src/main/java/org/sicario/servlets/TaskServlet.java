@@ -64,6 +64,8 @@ public class TaskServlet extends HttpServlet {
             userTasks(request, response);
         } else if ("changeStatus".equals(action)) {
             changeStatus(request, response);
+        } else if ("edit".equals(action)) {
+            showEditForm(request, response);
         } else {
             tasks(request, response);
         }
@@ -90,15 +92,14 @@ public class TaskServlet extends HttpServlet {
             createTask(request, response);
         }else if ("refuseTask".equals(action)) {
             refuseTask(request, response);
+        } else if ("update".equals(action)) {
+            updateTask(request, response);
         }
     }
 
     private void createTask(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User creator = (User) request.getSession().getAttribute("loggedUser");
-        if (creator == null) {
-            response.sendRedirect("tasks?action=list");
-            return;
-        }
+
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         LocalDate creationDate = LocalDate.parse(request.getParameter("creationDate"));
@@ -109,10 +110,8 @@ public class TaskServlet extends HttpServlet {
         String validationError = validateTaskForm(title, creationDate, dueDate, tagIds, description);
 
         if (validationError != null) {
-
             request.setAttribute("errorMessage", validationError);
-            request.getRequestDispatcher("tasks?action=create").forward(request, response);
-
+            response.sendRedirect("tasks?action=create");
         } else{
             Task task = new Task(title,description,creationDate,dueDate, TaskStatus.NOT_STARTED, null,creator, false);
             List<Tag> selectedTags = new ArrayList<>();
@@ -242,6 +241,60 @@ public class TaskServlet extends HttpServlet {
             request.setAttribute("error", "Task not found.");
         }
         response.sendRedirect(request.getContextPath() + "/tasks?action=userTasks");
+    }
+
+    private void updateTask(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long taskId = Long.parseLong(request.getParameter("taskId"));
+        Optional<Task> optionalTask = taskService.findById(taskId);
+
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+
+            task.setTitle(request.getParameter("title"));
+            task.setDescription(request.getParameter("description"));
+            task.setCreationDate(LocalDate.parse(request.getParameter("creationDate")));
+            task.setDueDate(LocalDate.parse(request.getParameter("dueDate")));
+
+            String[] tagIds = request.getParameterValues("tags[]");
+            List<Tag> selectedTags = new ArrayList<>();
+            if (tagIds != null) {
+                for (String tagId : tagIds) {
+                    Optional<Tag> tag = tagService.findById(Long.valueOf(tagId));
+                    tag.ifPresent(selectedTags::add);
+                }
+            }
+            task.setTags(selectedTags);
+
+            String assigneeId = request.getParameter("assignee_id");
+            if (assigneeId != null && !assigneeId.isEmpty()) {
+                User assignee = userService.getUserById(Long.valueOf(assigneeId));
+                task.setAssignee(assignee);
+            }
+
+            taskService.update(task);
+
+            response.sendRedirect("tasks?action=list");
+        } else {
+            response.sendRedirect("tasks?action=list");
+        }
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long taskId = Long.parseLong(request.getParameter("taskId"));
+        Optional<Task> optionalTask = taskService.findById(taskId);
+
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+            List<Tag> allTags = tagService.findAll();
+            List<User> users = userService.getRegularUsers();
+
+            request.setAttribute("task", task);
+            request.setAttribute("tags", allTags);
+            request.setAttribute("users", users);
+            request.getRequestDispatcher("/WEB-INF/views/updateTaskForm.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("tasks?action=list");
+        }
     }
 
 }

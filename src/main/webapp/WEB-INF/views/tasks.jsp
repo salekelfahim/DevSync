@@ -15,7 +15,9 @@
   <div class="sm:flex sm:items-center sm:justify-between">
     <h2 class="text-lg font-medium text-gray-200">Tasks</h2>
     <div class="mt-4">
-      <a href="tasks?action=create" class="flex items-center justify-center px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg gap-x-2 hover:bg-blue-600">
+      <div><a href="users?action=list" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Home</a>
+      </div>
+        <a href="tasks?action=create" class="flex items-center justify-center px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg gap-x-2 hover:bg-blue-600">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -68,9 +70,9 @@
                   </c:choose>
                 </td>
                 <td class="px-4 py-4 text-sm whitespace-nowrap">
-                  <button class="text-gray-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                    <span class="material-symbols-outlined">visibility</span>
-                  </button>
+                  <a href="tasks?action=edit&taskId=${task.id}" class="text-gray-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
+                    <span class="material-symbols-outlined">edit</span>
+                  </a>
                 </td>
               </tr>
             </c:forEach>

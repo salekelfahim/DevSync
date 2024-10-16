@@ -108,4 +108,30 @@ public class RequestRepositoryImpl implements RequestRepository {
             entityManager.close();
         }
     }
+
+    @Override
+    public Request update(Request request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Request cannot be null");
+        }
+        if (request.getId() == null) {
+            throw new IllegalArgumentException("Cannot update a request without an ID");
+        }
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Request updatedRequest = entityManager.merge(request);
+            entityManager.getTransaction().commit();
+            return updatedRequest;
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new PersistenceException("Error updating request: " + e.getMessage(), e);
+        } finally {
+            entityManager.close();
+        }
+    }
+
 }

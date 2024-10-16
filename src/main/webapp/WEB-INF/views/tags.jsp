@@ -12,6 +12,7 @@
 <section class="bg-gray-800 dark:bg-gray-900 flex-grow">
     <div class="container px-6 py-10 mx-auto">
         <h1 class="text-3xl font-extrabold text-center text-white capitalize lg:text-4xl">Tasks's <span class="text-blue-500">Tags</span></h1>
+        <a href="users?action=list" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">Home</a>
 
         <div class="grid grid-cols-1 gap-4 mt-8 xl:mt-12 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <c:forEach var="tag" items="${tags}">

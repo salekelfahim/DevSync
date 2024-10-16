@@ -13,4 +13,5 @@ public interface RequestRepository {
     List<Request> findByTaskId(Long taskId);
     List<Request> findByStatus(String status);
     void deleteById(Long id);
+    Request update(Request request);
 }
