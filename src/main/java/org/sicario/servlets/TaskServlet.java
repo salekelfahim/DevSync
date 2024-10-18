@@ -224,24 +224,34 @@ public class TaskServlet extends HttpServlet {
             User user = (User) request.getSession().getAttribute("loggedUser");
 
             if (manager != null && user != null) {
-                if (user.getTokenRefuse() > 0) {
-                    Request refuseRequest = new Request(user, task, "PENDING");
-                    requestService.createRequest(refuseRequest);
-                    user.setTokenRefuse(user.getTokenRefuse() - 1);
-                    userService.updateUser(user);
-
+                if (task.isRefused()) {
+                    request.setAttribute("error", "Task has already been refused.");
                 } else {
-                    request.setAttribute("error", "Not enough refuse tokens.");
+                    if (user.getTokenRefuse() > 0) {
+                        Request refuseRequest = new Request(user, task, "PENDING");
+                        requestService.createRequest(refuseRequest);
+
+                        user.setTokenRefuse(user.getTokenRefuse() - 1);
+                        userService.updateUser(user);
+
+                        task.setRefused(true);
+                        taskService.update(task);
+
+                        request.setAttribute("success", "Task refusal request has been created.");
+                    } else {
+                        request.setAttribute("error", "Not enough refuse tokens.");
+                    }
                 }
             } else {
                 request.setAttribute("error", "Manager or user not found.");
-
             }
         } else {
             request.setAttribute("error", "Task not found.");
         }
+
         response.sendRedirect(request.getContextPath() + "/tasks?action=userTasks");
     }
+
 
     private void updateTask(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long taskId = Long.parseLong(request.getParameter("taskId"));
