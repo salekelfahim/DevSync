@@ -1,5 +1,8 @@
 package org.sicario.service;
 
+import org.sicario.exceptions.InvalidUserDataException;
+import org.sicario.exceptions.UserAlreadyExistsException;
+import org.sicario.exceptions.UserNullException;
 import org.sicario.model.entities.User;
 import org.sicario.model.enums.UserRole;
 import org.sicario.repository.interfaces.UserRepository;
@@ -19,6 +22,19 @@ public class UserService {
     }
 
     public void createUser(User user) {
+        if (user == null) {
+            throw new UserNullException("User cannot be null");
+        }
+
+        if (user.getId() != null) {
+            throw new InvalidUserDataException("New user should not have an ID");
+        }
+
+        Optional<User> existingUser = getUserByEmail(user.getEmail());
+        if (existingUser.isPresent()) {
+            throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists");
+        }
+
         userRepository.save(user);
     }
 
